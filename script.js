@@ -7,13 +7,17 @@ const text = document.getElementById('text');
 const amount = document.getElementById('amount');
 
 
-const dummyTransanction =[{id:1,text:'flower',amount:-20},
+/*const dummyTransanction =[{id:1,text:'flower',amount:-20},
 {id:2,text:'salary',amount:300},
 {id:3,text:'book',amount:-20},
-{id:4,text:'camera',amount:150}]
+{id:4,text:'camera',amount:150}]*/
 
 
-let transanction =dummyTransanction;
+const localStorageTransaction = JSON.parse(localStorage.getItem('transaction'));
+
+let transactions = 
+                   localStorage.getItem('transaction')!=null?
+                   localStorageTransaction:[];
 //add transaction
 function addTransation(e){
     e.preventDefault();
@@ -27,9 +31,11 @@ function addTransation(e){
             amount:+amount.value
 
         };
-        transanction.push(transaction);
+        transactions.push(transaction);
         addTransationDOM(transaction);
         updateValues();
+
+        updateLocalStorage();
         text.value='';
         amount.value='';
     }
@@ -49,12 +55,14 @@ function addTransationDOM(transaction){
 
     //add class based on value
     item.classList.add(transaction.amount<0?'minus':'plus')
-    item.innerHTML=`${transaction.text}<span>${sign}${Math.abs(transaction.amount)}</span><button class="delete-btn" >X</button>`;
+    item.innerHTML=`${transaction.text}<span>${sign}${Math.abs(transaction.amount)}
+                    </span><button class="delete-btn" onclick="removeTransation
+                    (${transaction.id})">X</button>`;
     list.appendChild(item);
 }
 //Update the balence income and expense
 function updateValues(){
-    const amounts = transanction.map(transanction=>transanction.amount)
+    const amounts = transactions.map(transanction=>transanction.amount)
     const total =amounts.reduce((acc,item)=>(acc+=item),0).toFixed(2);
     const income=amounts
                .filter(item=>item>0)
@@ -68,16 +76,23 @@ function updateValues(){
         .toFixed(2);
 
     balance.innerHTML=`&#8377 ${total}`;
-    money_plus.innerHTML=`$${income}`;
-    money_minus.innerHTML=`$${expense}`;
+    money_plus.innerHTML=`&#8377 ${income}`;
+    money_minus.innerHTML=`&#8377 ${expense}`;
 }
 //Remove transacton by ID
-
-
+function removeTransation(id){
+    transactions = transactions.filter(transanction=>transanction.id!==id);
+    updateLocalStorage();
+    init();
+}
+//uPDATE LOCAL STROGE TRANSACTION
+function updateLocalStorage(){
+    localStorage.setItem('transaction',JSON.stringify(transactions))
+}
 //Init app
 function init(){
     list.innerHTML= '';
-    transanction.forEach(addTransationDOM)
+    transactions.forEach(addTransationDOM)
     updateValues();
 }
 init();
