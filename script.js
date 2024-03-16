@@ -29,6 +29,7 @@ function addTransation(e){
             id:generateID(),
             text:text.value,
             amount:+amount.value
+            
 
         };
         transactions.push(transaction);
@@ -38,7 +39,9 @@ function addTransation(e){
         updateLocalStorage();
         text.value='';
         amount.value='';
+       
     }
+    
 
 }
 //generate random id
@@ -78,6 +81,7 @@ function updateValues(){
     balance.innerHTML=`&#8377 ${total}`;
     money_plus.innerHTML=`&#8377 ${income}`;
     money_minus.innerHTML=`&#8377 ${expense}`;
+    
 }
 //Remove transacton by ID
 function removeTransation(id){
@@ -88,6 +92,7 @@ function removeTransation(id){
 //uPDATE LOCAL STROGE TRANSACTION
 function updateLocalStorage(){
     localStorage.setItem('transaction',JSON.stringify(transactions))
+    
 }
 //Init app
 function init(){
